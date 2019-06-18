@@ -29,19 +29,50 @@
     }
 
     var _this = undefined;
-    var logParameters = function (prefix, postfix) {
+    /**
+     * Simple decorator to log the method name, parameters and output to the console
+     *
+     * @param {string} prefix Prefix message to add to the console log
+     * @returns
+     */
+    var logParameters = function (prefix) {
         /**
          * target = Either the constructor function of the class for a static member,
          *          or the prototype of the class for an instance member.
          *
          * propertyKey = The name of the member.
          *
-         * descriptor = The Property Descriptor for the member.
+         * descriptor = The Property Descriptor for the member. For example, if we
+         *              used this decorator on a class called Maths and on a method
+         *              called multiple, then the descriptor would be equal to us
+         *              doing the below:
+         *              Object.getOwnPropertyDescriptor(Maths.prototype, "multiple")
          */
         return function (target, propertyKey, descriptor) {
+            // log all the parameters for debugging. Look in your console logs for a 
+            // closer look
             console.log('target', target);
             console.log('propertyKey', propertyKey);
             console.log('descriptor', descriptor);
+            // keep a reference to the original method
+            var originalMethod = descriptor.value;
+            // set the method to our new method that will get fired
+            descriptor.value = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                // convert our parameters into a string for logging later
+                var params = args.map(function (a) { return JSON.stringify(a); }).join(',');
+                // fire our original method and get the result
+                var result = originalMethod.apply(_this, args);
+                // get the result of our original method as a string
+                var output = JSON.stringify(result);
+                // log the method call, parameters and out to the console
+                console.log(prefix + "Called: " + propertyKey + "(" + params + ") => " + output);
+                // return our original method result
+                return result;
+            };
         };
     };
     // DECORATOR EXAMPLES //////////////////////////////////////////////////////////
@@ -54,14 +85,14 @@
      */
     var confirmable = function (message) {
         return function (target, propertyKey, descriptor) {
-            var originalFunction = descriptor.value;
+            var originalMethod = descriptor.value;
             descriptor.value = function () {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
                 }
                 if (confirm(message)) {
-                    return originalFunction.apply(_this, args);
+                    return originalMethod.apply(_this, args);
                 }
                 else {
                     return null;
@@ -75,11 +106,9 @@
         function Test() {
         }
         Test.prototype.log = function (message) {
-            if (message) {
-                console.log(message);
-                return;
-            }
-            console.log('Log function has executed...');
+            message = message || 'Log function has executed...';
+            console.log(message);
+            return message;
         };
         Test.prototype.multiple = function (num1, num2) {
             return num1 * num2;
@@ -89,10 +118,13 @@
             confirmable('Are you super duper sure?')
         ], Test.prototype, "log", null);
         __decorate([
-            logParameters()
+            logParameters('---- ')
         ], Test.prototype, "multiple", null);
         return Test;
     }());
+    var testA = new Test();
+    var result = testA.multiple(2, 2);
+    console.log('testA.multiple(2,2) result = ' + result);
 
     exports.Test = Test;
 
