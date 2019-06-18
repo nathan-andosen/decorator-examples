@@ -1,0 +1,1 @@
+{"code":"var test = /** @class */ (function () {\r\n    function test() {\r\n    }\r\n    return test;\r\n}());\r\nexport { test };\r\n","references":[]}
