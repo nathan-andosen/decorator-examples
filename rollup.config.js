@@ -12,7 +12,7 @@ const prodBuild = {
   output: {
     file: 'dist/bundle.js',
     format: 'umd',
-    name: 'decorators-example'
+    name: 'DecoratorExamples'
   },
   plugins: [
     typescript(typescriptPluginOptions),

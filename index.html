@@ -6,6 +6,14 @@
   </head>
 
   <body>
-    
+    <button id="btnConfirmable">Run confirmable decorator</button>
+
+    <script type="text/javascript">
+      var btnConfirmable = document.getElementById('btnConfirmable');
+      btnConfirmable.addEventListener('click', function(ev) {
+        var test = new DecoratorExamples.Test();
+        test.log('Hopefully I get logged...');
+      });
+    </script>
   </body>
 </html>
