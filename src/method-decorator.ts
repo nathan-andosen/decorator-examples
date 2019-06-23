@@ -1,5 +1,7 @@
 
 /**
+ * Method Decorator
+ * 
  * Simple decorator to log the method name, parameters and output to the console
  *
  * @param {string} prefix Prefix message to add to the console log
@@ -52,8 +54,7 @@ export const logParameters = (prefix: string) => {
 
 
 
-// DECORATOR EXAMPLES //////////////////////////////////////////////////////////
-
+// CONFIRMABLE METHOD DECORATOR EXAMPLE //////////////////////////////////////
 
 /**
  * Decorator that shows a confirm dialog, if the user confirms, the method

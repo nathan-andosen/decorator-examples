@@ -8,11 +8,22 @@
   <body>
     <button id="btnConfirmable">Run confirmable decorator</button>
 
+    <button id="btnFireEvent">Fire event using decorator</button>
+
     <script type="text/javascript">
       var btnConfirmable = document.getElementById('btnConfirmable');
       btnConfirmable.addEventListener('click', function(ev) {
         var test = new DecoratorExamples.Test();
         test.log('Hopefully I get logged...');
+      });
+
+      var btnFireEvent = document.getElementById('btnFireEvent');
+      btnFireEvent.addEventListener('click', function(ev) {
+        var test = new DecoratorExamples.Test();
+        window.addEventListener('bang-bang', function(e) {
+          console.log(e);
+        });
+        test.fireAnEvent();
       });
     </script>
   </body>
