@@ -1,8 +1,8 @@
 # Decorator Examples
 
-This repo will help you understand decorator's and give you a good starting point for creating your own decorators. Check out the directory _/src_ for useful information and examples of each type of decorator.
+This repo will help you understand decorator's and give you a good starting point for creating your own decorators. 
 
-_work in progress_
+Check out the directory _/src_ for useful information and examples of each type of decorator.
 
 ## Class decorator
 
