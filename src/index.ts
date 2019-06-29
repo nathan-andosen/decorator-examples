@@ -1,6 +1,9 @@
 import { logParameters, confirmable } from './method-decorator';
 import { logProperty, event, EventEmitter } from './property-decorator';
+import { logParameter } from './parameter-decorator';
+import { logClass } from './class-decorator';
 
+@logClass()
 export class Test {
   @confirmable('Are you sure?')
   @confirmable('Are you super duper sure?')
@@ -22,6 +25,10 @@ export class Test {
 
   fireAnEvent() {
     this.bangBang.emit({ message: 'Hope this works!'});
+  }
+
+  sayHi(@logParameter() message: string) {
+    console.log(`hello ${message}`);
   }
 }
 

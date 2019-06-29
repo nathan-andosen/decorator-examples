@@ -10,6 +10,8 @@
 
     <button id="btnFireEvent">Fire event using decorator</button>
 
+    <button id="btnSayHi">Say Hi</button>
+
     <script type="text/javascript">
       var btnConfirmable = document.getElementById('btnConfirmable');
       btnConfirmable.addEventListener('click', function(ev) {
@@ -24,6 +26,12 @@
           console.log(e);
         });
         test.fireAnEvent();
+      });
+
+      var btnSayHi = document.getElementById('btnSayHi');
+      btnSayHi.addEventListener('click', function(ev) {
+        var test = new DecoratorExamples.Test();
+        test.sayHi('Nathan');
       });
     </script>
   </body>

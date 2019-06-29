@@ -4,16 +4,20 @@ This repo will help you understand decorator's and give you a good starting poin
 
 Check out the directory _/src_ for useful information and examples of each type of decorator.
 
+Big thanks to this [codeburst article](https://codeburst.io/decorate-your-code-with-typescript-decorators-5be4a4ffecb4).
+
 ## Class decorator
 
-_Todo_
+[Class decorator](src/class-decorator.ts)
+
+* Allows you to override the constructor of a class
 
 ## Method decorator
 
 [Method decorator](src/method-decorator.ts)
 
 * Allows you to override a method's funciton
-* Execute code before or after it runs.
+* Execute code before or after it runs
 
 ## Property decorator
 
@@ -25,7 +29,35 @@ _Todo_
 
 ### Class decorator
 
-_Todo_
+```javascript
+export const classDecorator = (options: any) => {
+  return (target: Function) => {
+    // save a reference to the original constructor
+    const original = target;
+  
+    // a utility function to generate instances of a class
+    function construct(constructor, args) {
+      const c: any = function () {
+        return constructor.apply(this, args);
+      }
+      c.prototype = constructor.prototype;
+      return new c();
+    }
+  
+    // the new constructor behaviour
+    const f: any = function (...args) {
+      console.log(`New: ${original['name']} is created`);
+      return construct(original, args);
+    }
+  
+    // copy prototype so intanceof operator still works
+    f.prototype = original.prototype;
+  
+    // return new constructor (will override original)
+    return f;
+  };
+};
+```
 
 ### Method decorator
 

@@ -39,6 +39,10 @@
         return c > 3 && r && Object.defineProperty(target, key, r), r;
     }
 
+    function __param(paramIndex, decorator) {
+        return function (target, key) { decorator(target, key, paramIndex); }
+    }
+
     var _this = undefined;
     /**
      * Method Decorator
@@ -192,6 +196,80 @@
         };
     };
 
+    var logParameter = function () {
+        /**
+         * target = Current objects prototype. Example: if you had a User
+         *          object / class, target would be User.prototype
+         *
+         * propertyKey = name of the method
+         *
+         * parameterIndex = position of the parameter in the argument array
+         *
+         *
+         */
+        return function (target, propertyKey, parameterIndex) {
+            // log all the parameters for debugging. Look in your console logs for a 
+            // closer look
+            console.log('target', target);
+            console.log('propertyName', propertyKey);
+            console.log('index', parameterIndex);
+            // generate metadatakey for the respective method
+            // to hold the position of the decorated parameters
+            var metadataKey = "log_" + propertyKey + "_parameters";
+            if (Array.isArray(target[metadataKey])) {
+                target[metadataKey].push(parameterIndex);
+            }
+            else {
+                target[metadataKey] = [parameterIndex];
+            }
+        };
+    };
+
+    /**
+     * Class Decorator
+     *
+     * NOTES:
+     * - These decorators are called when the class is declared, not when a
+     *   new instance is created
+     *
+     * The example below shows how we can override the constructor of the class,
+     * add in extra functionality to it. In this example, we log the name of the
+     * construtor
+     *
+     */
+    var logClass = function () {
+        /**
+         * target = constructor of the class
+         */
+        return function (target) {
+            // save a reference to the original constructor
+            var original = target;
+            // a utility function to generate instances of a class
+            function construct(constructor, args) {
+                var c = function () {
+                    return constructor.apply(this, args);
+                };
+                c.prototype = constructor.prototype;
+                return new c();
+            }
+            // the new constructor behaviour
+            // this is an example of how we are overriding the original constructor,
+            // adding in extra functionality, which is logging the name
+            var f = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                console.log("New: " + original['name'] + " is created");
+                return construct(original, args);
+            };
+            // copy prototype so intanceof operator still works
+            f.prototype = original.prototype;
+            // return new constructor (will override original)
+            return f;
+        };
+    };
+
     var Test = /** @class */ (function () {
         function Test() {
         }
@@ -206,6 +284,9 @@
         Test.prototype.fireAnEvent = function () {
             this.bangBang.emit({ message: 'Hope this works!' });
         };
+        Test.prototype.sayHi = function (message) {
+            console.log("hello " + message);
+        };
         __decorate([
             confirmable('Are you sure?'),
             confirmable('Are you super duper sure?')
@@ -216,6 +297,12 @@
         __decorate([
             event()
         ], Test.prototype, "bangBang", void 0);
+        __decorate([
+            __param(0, logParameter())
+        ], Test.prototype, "sayHi", null);
+        Test = __decorate([
+            logClass()
+        ], Test);
         return Test;
     }());
     // const testA = new Test();
