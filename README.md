@@ -30,7 +30,7 @@ Big thanks to this [codeburst article](https://codeburst.io/decorate-your-code-w
 ### Class decorator
 
 ```javascript
-export const classDecorator = (options: any) => {
+export function classDecorator(options: any) {
   return (target: Function) => {
     // save a reference to the original constructor
     const original = target;
@@ -61,14 +61,22 @@ export const classDecorator = (options: any) => {
 
 ### Method decorator
 
+__Important:__ 
+
+> Remember that the method decorator changes the original function definition on the _prototype_, and that the class property will be shared across all instances. If you need to access the instance of the class, use the _this_ keyword in the function you used to override the orignal _descriptor.value_ function.
+
 ```javascript
-export const methodDecorator = (options: any) => {
+export function methodDecorator(options: any) {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // keep a reference to the original method
     const originalMethod = descriptor.value;
 
     // set the method to our new method that will get fired
-    descriptor.value = (...args: any[]) => {
+    descriptor.value = function() {
+      // this - refers to the instance of the class
+
+      const args: any = arguments;
+
       // fire our original method and get the result
       const result = originalMethod.apply(this, args);
 
@@ -82,7 +90,7 @@ export const methodDecorator = (options: any) => {
 ### Property Decorator
 
 ```javascript
-export const propertyDecorator = (options: any) => {
+export function propertyDecorator(options: any) {
   return (target: Object, propertyName: string) => {
     // our property value
     let _val = target[propertyName];

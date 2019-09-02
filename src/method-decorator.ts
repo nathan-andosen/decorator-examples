@@ -7,7 +7,7 @@
  * @param {string} prefix Prefix message to add to the console log
  * @returns
  */
-export const logParameters = (prefix: string) => {
+export function logParameters(prefix: string) {
   /**
    * target = Either the constructor function of the class for a static member,
    *          or the prototype of the class for an instance member.
@@ -31,7 +31,8 @@ export const logParameters = (prefix: string) => {
     const originalMethod = descriptor.value;
 
     // set the method to our new method that will get fired
-    descriptor.value = (...args: any[]) => {
+    descriptor.value = function() {
+      const args: any = arguments;
 
       // convert our parameters into a string for logging later
       const params = args.map( a=> JSON.stringify(a)).join(',');
@@ -67,7 +68,8 @@ export const confirmable = (message: string) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
 
-    descriptor.value = (...args: any[]) => {
+    descriptor.value = function() {
+      const args = arguments;
       if (confirm(message)) {
         return originalMethod.apply(this, args);
       } else {

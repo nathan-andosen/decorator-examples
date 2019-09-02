@@ -10,7 +10,7 @@
  * construtor
  * 
  */
-export const logClass = () => {
+export function logClass() {
   /**
    * target = constructor of the class
    */

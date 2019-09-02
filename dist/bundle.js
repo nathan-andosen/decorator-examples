@@ -43,7 +43,6 @@
         return function (target, key) { decorator(target, key, paramIndex); }
     }
 
-    var _this = undefined;
     /**
      * Method Decorator
      *
@@ -52,7 +51,7 @@
      * @param {string} prefix Prefix message to add to the console log
      * @returns
      */
-    var logParameters = function (prefix) {
+    function logParameters(prefix) {
         /**
          * target = Either the constructor function of the class for a static member,
          *          or the prototype of the class for an instance member.
@@ -75,14 +74,11 @@
             var originalMethod = descriptor.value;
             // set the method to our new method that will get fired
             descriptor.value = function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
+                var args = arguments;
                 // convert our parameters into a string for logging later
                 var params = args.map(function (a) { return JSON.stringify(a); }).join(',');
                 // fire our original method and get the result
-                var result = originalMethod.apply(_this, args);
+                var result = originalMethod.apply(this, args);
                 // get the result of our original method as a string
                 var output = JSON.stringify(result);
                 // log the method call, parameters and out to the console
@@ -91,7 +87,7 @@
                 return result;
             };
         };
-    };
+    }
     // CONFIRMABLE METHOD DECORATOR EXAMPLE //////////////////////////////////////
     /**
      * Decorator that shows a confirm dialog, if the user confirms, the method
@@ -104,12 +100,9 @@
         return function (target, propertyKey, descriptor) {
             var originalMethod = descriptor.value;
             descriptor.value = function () {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
+                var args = arguments;
                 if (confirm(message)) {
-                    return originalMethod.apply(_this, args);
+                    return originalMethod.apply(this, args);
                 }
                 else {
                     return null;
@@ -196,7 +189,7 @@
         };
     };
 
-    var logParameter = function () {
+    function logParameter() {
         /**
          * target = Current objects prototype. Example: if you had a User
          *          object / class, target would be User.prototype
@@ -223,7 +216,7 @@
                 target[metadataKey] = [parameterIndex];
             }
         };
-    };
+    }
 
     /**
      * Class Decorator
@@ -237,7 +230,7 @@
      * construtor
      *
      */
-    var logClass = function () {
+    function logClass() {
         /**
          * target = constructor of the class
          */
@@ -268,7 +261,7 @@
             // return new constructor (will override original)
             return f;
         };
-    };
+    }
 
     var Test = /** @class */ (function () {
         function Test() {

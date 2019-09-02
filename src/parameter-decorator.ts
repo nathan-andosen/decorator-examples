@@ -1,5 +1,5 @@
 
-export const logParameter = () => {
+export function logParameter() {
   /**
    * target = Current objects prototype. Example: if you had a User 
    *          object / class, target would be User.prototype
